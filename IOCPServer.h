@@ -3,6 +3,10 @@
 #include<Windows.h>
 #include<vector>
 #pragma comment(lib,"ws2_32.lib")
+#define CONTAINING_RECORD(address, type, field) ((type *)( \
+                                                  (PCHAR)(address) - \
+                                                  (ULONG_PTR)(&((type *)0)->field)))
+
 typedef enum _OPERATION_TYPE
 {
 	ACCEPT_POSTED,                     // 标志投递的Accept操作
@@ -34,6 +38,9 @@ typedef struct _PER_SOCKET_CONTEXT
 };
 class Server {
 private:
+	HANDLE           m_hShutdownEvent;
+	//DWORD WINAPI _WorkerThread(LPVOID lpparam);
+	bool  _PostAccept();
 	HANDLE* m_phWorkerThreads;             // 工作者线程的句柄指针
 	int		m_nThreads;                    // 生成的线程数量
 	HANDLE m_hIOCompletionPort;
